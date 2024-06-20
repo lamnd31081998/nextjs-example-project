@@ -48,7 +48,7 @@ export default function Login() {
       case HttpStatusCode.Ok: {
         localStorage.setItem("user_info", JSON.stringify(login_response.data));
 
-        redirect("http://localhost:3000/dashbroad");
+        redirect("/dashbroad");
       }
       default: {
         openNotification(login_response.message);
