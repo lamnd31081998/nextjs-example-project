@@ -1,25 +1,13 @@
 "use client";
 
-import {
-  Button,
-  Card,
-  Checkbox,
-  Form,
-  FormProps,
-  Input,
-  Spin,
-  notification,
-} from "antd";
+import { Button, Card, Form, FormProps, Input, Spin, notification } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
-import { AuthApi } from "@/api/auth.api";
-import "./../../globals.css";
 import { useEffect, useState } from "react";
-import React from "react";
-import { HttpStatusCode } from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import "./../../globals.css";
 
-export default function Login() {
+export default function Register() {
   const router = useRouter();
 
   useEffect(() => {
@@ -29,8 +17,9 @@ export default function Login() {
 
   type FieldType = {
     username: string;
+    name: string;
     password: string;
-    remember?: string;
+    confirm_password: string;
   };
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -52,29 +41,6 @@ export default function Login() {
   const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
     setLoading(true);
 
-    let login_response = await AuthApi.getInstance.Login({
-      username: values.username,
-      password: values.password,
-    });
-
-    try {
-      switch (login_response.status) {
-        case HttpStatusCode.Ok: {
-          localStorage.setItem(
-            "user_info",
-            JSON.stringify(login_response.data)
-          );
-          router.push("/dashbroad");
-        }
-        default: {
-          openNotification("error", "Error", login_response.message);
-          break;
-        }
-      }
-    } catch (e) {
-      console.log("onFinish Err === ", e);
-    }
-
     setLoading(false);
   };
 
@@ -91,12 +57,11 @@ export default function Login() {
       {contextHolder}
       <div className="w-screen h-screen flex justify-center items-center">
         <Card
-          title="LOGIN TO SYSTEM"
+          title="REGISTER TO SYSTEM"
           className="text-center shadow-lg shadow-gray-300 w-[400px]"
         >
           <Form
-            name="login"
-            initialValues={{ remember: true }}
+            name="register"
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
@@ -110,9 +75,12 @@ export default function Login() {
               <Input placeholder="Username" />
             </Form.Item>
 
-            <a href="#" className="flex justify-end mb-2">
-              Forgot Password?
-            </a>
+            <Form.Item<FieldType>
+              name="name"
+              rules={[{ required: true, message: "Please input your name!" }]}
+            >
+              <Input placeholder="Name" />
+            </Form.Item>
 
             <Form.Item<FieldType>
               name="password"
@@ -124,20 +92,40 @@ export default function Login() {
               <Input.Password placeholder="Password" />
             </Form.Item>
 
-            <Form.Item<FieldType> name="remember" valuePropName="checked">
-              <Checkbox className="flex justify-end">Remember me</Checkbox>
+            <Form.Item<FieldType>
+              name="confirm_password"
+              dependencies={["password"]}
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your confirm password!",
+                },
+                { min: 6, message: "Password need at least 6 chars" },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue("password") === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error("Password and Confirm Password Unmatch")
+                    );
+                  },
+                }),
+              ]}
+            >
+              <Input.Password placeholder="Confirm Password" />
             </Form.Item>
 
             <Form.Item>
               <Spin spinning={loading} indicator={<LoadingOutlined spin />}>
                 <Button type="primary" htmlType="submit" className="w-[100px]">
-                  Login
+                  Register
                 </Button>
               </Spin>
             </Form.Item>
 
-            <Link href={"/auth/register"} className="text-center">
-              No Account? Register Now
+            <Link href="/auth/login" className="text-center">
+              Already Has Account? Login Now
             </Link>
           </Form>
         </Card>

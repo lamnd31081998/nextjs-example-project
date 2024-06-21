@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Dashbroad",
+  title: "Register",
 };
 
-export default function DashbroadLayout({
+export default function RegisterLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

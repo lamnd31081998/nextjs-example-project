@@ -22,6 +22,23 @@ export class AuthApi {
 
     private readonly api_url = process.env.NEXT_PUBLIC_API_URL;
 
+    async Register(payload: { username: string, name: string, password: string, confirm_passwod: string }) {
+        return axios.post(
+            `${this.api_url}/login`,
+            payload,
+            {
+                responseType: 'json'
+            }
+        )
+            .then(res => {
+                return res.data;
+            })
+            .catch(err => {
+                console.log("Login Err === ", err?.response?.data || err);
+                return err?.response?.data || err;
+            });
+    }
+
     async Login(payload: { username: string, password: string }) {
         return axios.post(
             `${this.api_url}/login`,
@@ -35,6 +52,25 @@ export class AuthApi {
             })
             .catch(err => {
                 console.log("Login Err === ", err?.response?.data || err);
+                return err?.response?.data || err;
+            });
+    }
+
+    async Logout(access_token: string) {
+        return axios.delete(
+            `${this.api_url}/logout`,
+            {
+                responseType: 'json',
+                headers: {
+                    Authorization: `Bearer ${access_token}`
+                }
+            }
+        )
+            .then(res => {
+                return res.data;
+            })
+            .catch(err => {
+                console.log("Logout Err === ", err?.response?.data || err);
                 return err?.response?.data || err;
             });
     }
