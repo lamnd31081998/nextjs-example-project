@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import "./../../globals.css";
+import { AuthApi } from "@/api/auth.api";
+import { HttpStatusCode } from "axios";
 
 export default function Register() {
   const router = useRouter();
@@ -15,7 +17,7 @@ export default function Register() {
     else setIsShow(true);
   }, []);
 
-  type FieldType = {
+  type RegisterField = {
     username: string;
     name: string;
     password: string;
@@ -34,17 +36,40 @@ export default function Register() {
     api[type]({
       message: title,
       description: message,
-      duration: 1,
+      duration: 1.5,
     });
   };
 
-  const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
+  const onFinish: FormProps<RegisterField>["onFinish"] = async (values) => {
     setLoading(true);
+
+    let register_response = await AuthApi.getInstance.Register(values);
+
+    try {
+      switch(register_response.status) {
+        case HttpStatusCode.Created: {
+          openNotification('success', 'Success', register_response.message);
+
+          setTimeout(() => {
+            router.push('/auth/login')
+          }, 500);
+
+          break;
+        }
+        default: {
+          openNotification('error', 'Error', register_response.message);
+          break;
+        }
+      }
+    }
+    catch(e) {
+      console.log("onFinish Err === ", e);
+    }
 
     setLoading(false);
   };
 
-  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
+  const onFinishFailed: FormProps<RegisterField>["onFinishFailed"] = (
     errorInfo
   ) => {
     console.log("Failed:", errorInfo.values);
@@ -66,7 +91,7 @@ export default function Register() {
             onFinishFailed={onFinishFailed}
             autoComplete="off"
           >
-            <Form.Item<FieldType>
+            <Form.Item<RegisterField>
               name="username"
               rules={[
                 { required: true, message: "Please input your username!" },
@@ -75,14 +100,14 @@ export default function Register() {
               <Input placeholder="Username" />
             </Form.Item>
 
-            <Form.Item<FieldType>
+            <Form.Item<RegisterField>
               name="name"
               rules={[{ required: true, message: "Please input your name!" }]}
             >
               <Input placeholder="Name" />
             </Form.Item>
 
-            <Form.Item<FieldType>
+            <Form.Item<RegisterField>
               name="password"
               rules={[
                 { required: true, message: "Please input your password!" },
@@ -92,7 +117,7 @@ export default function Register() {
               <Input.Password placeholder="Password" />
             </Form.Item>
 
-            <Form.Item<FieldType>
+            <Form.Item<RegisterField>
               name="confirm_password"
               dependencies={["password"]}
               rules={[

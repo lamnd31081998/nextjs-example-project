@@ -27,7 +27,7 @@ export default function DashBroad() {
     api[type]({
       message: title,
       description: message,
-      duration: 1,
+      duration: 1.5,
     });
   };
 

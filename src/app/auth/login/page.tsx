@@ -27,7 +27,7 @@ export default function Login() {
     else setIsShow(true);
   }, []);
 
-  type FieldType = {
+  type LoginField = {
     username: string;
     password: string;
     remember?: string;
@@ -45,26 +45,30 @@ export default function Login() {
     api[type]({
       message: title,
       description: message,
-      duration: 1,
+      duration: 1.5,
     });
   };
 
-  const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
+  const onFinish: FormProps<LoginField>["onFinish"] = async (values) => {
     setLoading(true);
 
-    let login_response = await AuthApi.getInstance.Login({
-      username: values.username,
-      password: values.password,
-    });
+    let login_response = await AuthApi.getInstance.Login(values);
 
     try {
       switch (login_response.status) {
         case HttpStatusCode.Ok: {
+          openNotification('success', 'Success', login_response.message);
+
           localStorage.setItem(
             "user_info",
             JSON.stringify(login_response.data)
           );
-          router.push("/dashbroad");
+
+          setTimeout(() => {
+            router.push("/dashbroad");
+          }, 500);
+
+          break;
         }
         default: {
           openNotification("error", "Error", login_response.message);
@@ -78,7 +82,7 @@ export default function Login() {
     setLoading(false);
   };
 
-  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
+  const onFinishFailed: FormProps<LoginField>["onFinishFailed"] = (
     errorInfo
   ) => {
     console.log("Failed:", errorInfo.values);
@@ -101,7 +105,7 @@ export default function Login() {
             onFinishFailed={onFinishFailed}
             autoComplete="off"
           >
-            <Form.Item<FieldType>
+            <Form.Item<LoginField>
               name="username"
               rules={[
                 { required: true, message: "Please input your username!" },
@@ -114,7 +118,7 @@ export default function Login() {
               Forgot Password?
             </a>
 
-            <Form.Item<FieldType>
+            <Form.Item<LoginField>
               name="password"
               rules={[
                 { required: true, message: "Please input your password!" },
@@ -124,7 +128,7 @@ export default function Login() {
               <Input.Password placeholder="Password" />
             </Form.Item>
 
-            <Form.Item<FieldType> name="remember" valuePropName="checked">
+            <Form.Item<LoginField> name="remember" valuePropName="checked">
               <Checkbox className="flex justify-end">Remember me</Checkbox>
             </Form.Item>
 

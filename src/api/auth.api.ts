@@ -22,9 +22,9 @@ export class AuthApi {
 
     private readonly api_url = process.env.NEXT_PUBLIC_API_URL;
 
-    async Register(payload: { username: string, name: string, password: string, confirm_passwod: string }) {
+    async Register(payload: { username: string, name: string, password: string, confirm_password: string }) {
         return axios.post(
-            `${this.api_url}/login`,
+            `${this.api_url}/register`,
             payload,
             {
                 responseType: 'json'
@@ -34,7 +34,7 @@ export class AuthApi {
                 return res.data;
             })
             .catch(err => {
-                console.log("Login Err === ", err?.response?.data || err);
+                console.log("Register Err === ", err?.response?.data || err);
                 return err?.response?.data || err;
             });
     }
