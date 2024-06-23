@@ -1,3 +1,4 @@
+import TemplateComponent from "@/component/layout/template.component";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -10,5 +11,7 @@ export default function DashbroadLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <>{children}</>;
+  return (
+    <TemplateComponent children={children} />
+  );
 }
