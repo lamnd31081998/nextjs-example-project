@@ -2,10 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-body,html {
-    margin: 0;
-    padding: 0;
+body,
+html {
+  margin: 0;
+  padding: 0;
 }
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
+}
+h1 {
+  font-size: 30px;
+  font-weight: 700;
 }

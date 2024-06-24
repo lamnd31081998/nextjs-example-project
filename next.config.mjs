@@ -17,8 +17,13 @@ const nextConfig = {
         destination: "/dashbroad",
         permanent: true,
       },
+      {
+        source: "/src/app/user",
+        destination: "/user",
+        permanent: true,
+      },
     ];
-  }
+  },
 };
 
 export default nextConfig;

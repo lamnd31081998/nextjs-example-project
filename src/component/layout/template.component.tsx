@@ -5,8 +5,11 @@ import HeaderComponent from "./header.component";
 import FooterComponent from "./footer.component";
 import SiderComponent from "./sider.component";
 import "./../../app/globals.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import NotficationComponent from "../shared/notification.component";
+import { AppStore, makeStore } from "@/lib/store/index.store";
+import { Provider } from "react-redux";
 const { Content } = Layout;
 
 const layoutStyle: React.CSSProperties = {
@@ -23,9 +26,14 @@ export default function TemplateComponent({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const storeRef = useRef<AppStore>();
+  if (!storeRef.current) {
+    // Create the store instance the first time this renders
+    storeRef.current = makeStore();
+  }
   const router = useRouter();
 
-  const [userInfo, setUserInfo] = useState<any>(null);
+  const [userInfo, setUserInfo] = useState<any>();
 
   useEffect(() => {
     if (!localStorage.getItem("user_info")) router.push("/auth/login");
@@ -41,13 +49,16 @@ export default function TemplateComponent({
   if (!isShow) return "";
 
   return (
-    <Layout style={layoutStyle}>
-      <SiderComponent />
-      <Layout>
-        <HeaderComponent user_info={userInfo} />
-        <Content style={contentStyle}>{children}</Content>
-        <FooterComponent />
+    <Provider store={storeRef.current}>
+      <Layout style={layoutStyle}>
+        <NotficationComponent />
+        <SiderComponent />
+        <Layout>
+          <HeaderComponent user_info={userInfo} />
+          <Content style={contentStyle}>{children}</Content>
+          <FooterComponent />
+        </Layout>
       </Layout>
-    </Layout>
+    </Provider>
   );
 }
