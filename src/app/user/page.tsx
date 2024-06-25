@@ -1,9 +1,10 @@
 "use client";
 
 import { Col, GetProp, Row, Upload, UploadFile, UploadProps, Image, Form, FormProps, Spin, Button, Input } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import "./../globals.css";
+import "./user.css";
 
 export default function User() {
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
@@ -69,7 +70,7 @@ export default function User() {
   return (
     <>
       <Row>
-        <Col span={3}></Col>
+        <Col span={4}></Col>
         <h1>User Info</h1>
       </Row>
       <Form
@@ -80,10 +81,11 @@ export default function User() {
         autoComplete="off"
       >
         <Row style={{ marginTop: 20 }}>
-          <Col span={6}></Col>
-          <Col span={2}>
+          <Col span={5}></Col>
+          <Col span={4}>
             <Form.Item<UserInfoField> name="avatar_url">
               <Upload
+                className="upload-component"
                 listType="picture-card"
                 onPreview={handlePreview}
                 onChange={handleChange}
@@ -103,10 +105,7 @@ export default function User() {
               )}
             </Form.Item>
           </Col>
-          <Col
-            span={8}
-            style={{ maxWidth: 435, marginTop: 6 }}
-          >
+          <Col span={8}>
             <Form.Item<UserInfoField>
               name="name"
               rules={[{ required: true, message: "Please input your name!" }]}
@@ -117,11 +116,7 @@ export default function User() {
             <Form.Item<UserInfoField> name="email">
               <Input placeholder="Email" />
             </Form.Item>
-          </Col>
-        </Row>
-        <Row>
-          <Col span={14}></Col>
-          <Col>
+
             <Form.Item>
               <Spin
                 spinning={loading}
@@ -130,7 +125,7 @@ export default function User() {
                 <Button
                   type="primary"
                   htmlType="submit"
-                  className="w-[80px]"
+                  className="w-[80px] float-end"
                 >
                   Update
                 </Button>

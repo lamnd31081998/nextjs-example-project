@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { AuthApi } from "@/api/auth.api";
 import { useAppDispatch } from "@/lib/store/index.store";
 import { updateNotificationState } from "@/lib/store/notification.store";
+import Link from "next/link";
 const { Header } = Layout;
 
 export default function HeaderComponent({
@@ -96,16 +97,18 @@ export default function HeaderComponent({
             title={user_info.name}
             icon={<SettingOutlined />}
             style={{ marginLeft: "auto" }}
+            className={window.location.pathname == "/user" ? "ant-menu-submenu-selected" : ""}
           >
             <Menu.Item
               key={"account_info"}
-              onClick={() => {
-                router.push("/user");
-              }}
+              className={window.location.pathname == "/user" ? "ant-menu-item-selected" : ""}
             >
-              Account
+              <Link href={"/user"}>User Info</Link>
             </Menu.Item>
-            <Menu.Item key={"logout"} onClick={logout}>
+            <Menu.Item
+              key={"logout"}
+              onClick={logout}
+            >
               Logout
             </Menu.Item>
           </Menu.SubMenu>

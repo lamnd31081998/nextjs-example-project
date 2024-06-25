@@ -1,0 +1,9 @@
+.upload-component .ant-upload-list-picture-card .ant-upload-select {
+  width: 200px !important;
+  height: 200px !important;
+}
+
+.upload-component .ant-upload-list-picture-card .ant-upload-list-item-container {
+  width: 200px !important;
+  height: 200px !important;
+}
