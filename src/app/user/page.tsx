@@ -5,10 +5,27 @@ import { useState } from "react";
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import "./../globals.css";
 import "./user.css";
+import { UserApi } from "@/api/user.api";
+import { HttpStatusCode } from "axios";
+import { useAppDispatch } from "@/lib/store/index.store";
+import { updateNotificationState } from "@/lib/store/notification.store";
+import FormData from "form-data";
 
 export default function User() {
+  const dispatch = useAppDispatch();
+  
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [fileList, setFileList] = useState<UploadFile[]>([
+    //@ts-ignore
+    ...(JSON.parse(localStorage.getItem("user_info"))?.user?.avatar_url) && [{
+      uid: '-1',
+      //@ts-ignore
+      name: JSON.parse(localStorage.getItem("user_info")).user.avatar_url.split('/')[JSON.parse(localStorage.getItem("user_info")).user.avatar_url.split('/').length - 1],
+      status: 'done',
+      //@ts-ignore
+      url:JSON.parse(localStorage.getItem("user_info")).user.avatar_url
+    }] || []
+  ]);
   const [loading, setLoading] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<UserInfoField>({
     //@ts-ignore
@@ -16,13 +33,13 @@ export default function User() {
     //@ts-ignore
     avatar_url: JSON.parse(localStorage.getItem("user_info")).user.avatar_url,
     //@ts-ignore
-    email: JSON.parse(localStorage.getItem("user_info")).user.email,
+    // email: JSON.parse(localStorage.getItem("user_info")).user.email,
   });
 
   type UserInfoField = {
     avatar_url?: string;
     name: string;
-    email?: string;
+    // email?: string;
   };
 
   type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
@@ -41,16 +58,83 @@ export default function User() {
   const handleChange: UploadProps["onChange"] = async ({ fileList: newFileList }) => {
     setFileList(newFileList);
 
-    if (newFileList.length > 0) {
+    if (fileList.length > 0) {
       setUserInfo({
         ...userInfo,
-        avatar_url: newFileList[0].url || (newFileList[0].preview as string) || (await getBase64(newFileList[0].originFileObj as FileType)),
+        avatar_url: fileList[0].url || (fileList[0].preview as string) || (await getBase64(fileList[0].originFileObj as FileType)),
       });
     }
   };
 
+  const handleRemove: UploadProps["onRemove"] = async (file) => {
+    setUserInfo({
+      ...userInfo,
+      avatar_url: ''
+    })
+  };
+
   const onFinish: FormProps<UserInfoField>["onFinish"] = async (values) => {
-    values.avatar_url = userInfo.avatar_url;
+    setLoading(true);
+
+    //@ts-ignore
+    let access_token = JSON.parse( localStorage.getItem("user_info")).access_token;
+
+    let dataSend = new FormData();
+    dataSend.append('name', values.name);
+    if (fileList?.length > 0 && !fileList[0]?.url) {
+      //@ts-ignore
+      dataSend.append("file", fileList[0].originFileObj as Blob);
+    }
+    if (fileList?.length > 0 && fileList[0].url) {
+      dataSend.append("avatar_url", fileList[0].url);
+    }
+
+    let update_response = await UserApi.getInstance.UpdateByToken(dataSend, access_token);
+
+    try {
+      switch(update_response.status) {
+        case HttpStatusCode.Ok: {
+          dispatch(
+            updateNotificationState({
+              type: "success",
+              title: "Success",
+              message: update_response.message,
+            })
+          );
+
+          localStorage.setItem(
+            "user_info",
+            JSON.stringify({
+              //@ts-ignore
+              ...JSON.parse(localStorage.getItem("user_info")),
+              user: {
+                //@ts-ignore
+                ...JSON.parse(localStorage.getItem("user_info")).user,
+                ...update_response.data
+              }
+            })
+          );
+
+          break;
+        }
+        default: {
+          dispatch(
+            updateNotificationState({
+              type: "error",
+              title: "Error",
+              message: update_response.message,
+            })
+          );
+
+          break;
+        }
+      }
+    }
+    catch(e) {
+      console.log("onFinish Err === ", e);
+    }
+
+    setLoading(false);
   };
 
   const onFinishFailed: FormProps<UserInfoField>["onFinishFailed"] = (errorInfo) => {
@@ -87,10 +171,12 @@ export default function User() {
               <Upload
                 className="upload-component"
                 listType="picture-card"
+                fileList={fileList}
                 onPreview={handlePreview}
                 onChange={handleChange}
+                onRemove={handleRemove}
               >
-                {fileList.length >= 1 ? null : uploadButton}
+                {fileList.length >= 1? null : uploadButton}
               </Upload>
               {userInfo?.avatar_url && (
                 <Image
@@ -113,9 +199,9 @@ export default function User() {
               <Input placeholder="Name" />
             </Form.Item>
 
-            <Form.Item<UserInfoField> name="email">
+            {/* <Form.Item<UserInfoField> name="email">
               <Input placeholder="Email" />
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item>
               <Spin

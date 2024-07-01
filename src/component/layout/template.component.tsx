@@ -36,7 +36,8 @@ export default function TemplateComponent({
   const [userInfo, setUserInfo] = useState<any>();
 
   useEffect(() => {
-    if (!localStorage.getItem("user_info")) router.push("/auth/login");
+    //@ts-ignore
+    if (!localStorage.getItem("user_info") || localStorage.getItem("user_info") == "null" || !JSON.parse(localStorage.getItem("user_info"))?.user) router.push("/auth/login");
     else {
       setIsShow(true);
       //@ts-ignore

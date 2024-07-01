@@ -17,7 +17,8 @@ export default function Login() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (localStorage.getItem("user_info")) router.push("/dashbroad");
+    //@ts-ignore
+    if (localStorage.getItem("user_info") && localStorage.getItem("user_info") != "null" && JSON.parse(localStorage.getItem("user_info"))?.user) router.push("/dashbroad");
     else setIsShow(true);
   }, []);
 
