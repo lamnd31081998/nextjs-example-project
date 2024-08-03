@@ -57,7 +57,7 @@ export class AuthApi {
     }
 
     async Logout(access_token: string) {
-        return axios.delete(
+        return axios.put(
             `${this.api_url}/logout`,
             {
                 responseType: 'json',

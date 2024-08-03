@@ -8,6 +8,7 @@ import { AuthApi } from "@/api/auth.api";
 import { useAppDispatch } from "@/lib/store/index.store";
 import { updateNotificationState } from "@/lib/store/notification.store";
 import Link from "next/link";
+import { HttpStatusCode } from "axios";
 const { Header } = Layout;
 
 export default function HeaderComponent({
@@ -39,26 +40,41 @@ export default function HeaderComponent({
     let logout_response = await AuthApi.getInstance.Logout(access_token);
 
     try {
-      dispatch(
-        updateNotificationState({
-          type: "success",
-          title: "Success",
-          message: logout_response.message,
-        })
-      );
-      localStorage.removeItem("user_info");
+      switch (logout_response.status) {
+        case HttpStatusCode.Ok: {
+          dispatch(
+            updateNotificationState({
+              type: "success",
+              title: "Success",
+              message: logout_response.message,
+            })
+          );
 
-      setTimeout(() => {
-        router.push("auth/login");
-      }, 1000);
+          localStorage.setItem(
+            "user_info",
+            JSON.stringify(logout_response.data)
+          );
+
+          setTimeout(() => {
+            router.push("/auth/login");
+          }, 500);
+
+          break;
+        }
+        default: {
+          dispatch(
+            updateNotificationState({
+              type: "error",
+              title: "Error",
+              message: logout_response.message,
+            })
+          );
+
+          break;
+        }
+      }
     } catch (e) {
-      dispatch(
-        updateNotificationState({
-          type: "error",
-          title: "Error",
-          message: logout_response.message,
-        })
-      );
+      console.log("onFinish Err === ", e);
     }
   };
 

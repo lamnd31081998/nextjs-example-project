@@ -85,8 +85,8 @@ export default function User() {
       //@ts-ignore
       dataSend.append("file", fileList[0].originFileObj as Blob);
     }
-    if (fileList?.length > 0 && fileList[0].url) {
-      dataSend.append("avatar_url", fileList[0].url);
+    if (fileList?.length <= 0) {
+      dataSend.append("is_delete_avatar", "true");
     }
 
     let update_response = await UserApi.getInstance.UpdateByToken(dataSend, access_token);

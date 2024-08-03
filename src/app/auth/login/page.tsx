@@ -54,7 +54,7 @@ export default function Login() {
 
           setTimeout(() => {
             router.push("/dashbroad");
-          }, 1000);
+          }, 500);
 
           break;
         }

@@ -49,7 +49,7 @@ export default function Register() {
 
           setTimeout(() => {
             router.push("/auth/login");
-          }, 1000);
+          }, 500);
 
           break;
         }
