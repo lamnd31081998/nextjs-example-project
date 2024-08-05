@@ -9,7 +9,7 @@ export default function Root() {
   useEffect(() => {
     //@ts-ignore
     if (!localStorage.getItem("user_info") || localStorage.getItem("user_info") == "null" || !JSON.parse(localStorage.getItem("user_info"))?.user) router.push("/auth/login");
-    else router.push("/dashbroad");
+    else router.push("/dashboard");
   }, []);
 
   return <></>;

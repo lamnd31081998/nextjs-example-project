@@ -13,5 +13,11 @@ export default function UserLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <TemplateComponent children={children} />;
+  return (
+    <html lang="en">
+      <body>
+        <TemplateComponent children={children} />
+      </body>
+    </html>
+  );
 }

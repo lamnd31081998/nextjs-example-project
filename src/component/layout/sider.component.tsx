@@ -19,8 +19,9 @@ export default function SiderComponent() {
   type MenuItem = Required<MenuProps>["items"][number];
   const [selected, setSelected] = useState<string>("");
 
-  // useEffect(() => {
-  // }, [])
+  useEffect(() => {
+    setSelected(window.location.pathname);
+  }, []);
 
   function getItem(
     label: React.ReactNode,
@@ -37,13 +38,13 @@ export default function SiderComponent() {
   }
 
   const items: MenuItem[] = [
-    getItem("Homepage", "/dashbroad", <HomeOutlined />),
+    getItem("Dashboard", "/dashboard", <HomeOutlined />),
     getItem("Staff Management", "/staff", <TeamOutlined />)
   ];
 
   return (
     <Sider width="15vw" style={siderStyle}>
-      <a href="/dashbroad">
+      <a href="/dashboard">
         <img
           style={{ height: 60, margin: "auto" }}
           src="https://images.squarespace-cdn.com/content/v1/575a6067b654f9b902f452f4/1552683653140-0UUVQSSUEWVC73AWAEQG/300Logo.png"
@@ -56,7 +57,6 @@ export default function SiderComponent() {
         items={items}
         onSelect={(info) => {
           setSelected(info.key);
-          console.log(info.key);
           router.push(info.key);
         }}
       />

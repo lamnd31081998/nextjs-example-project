@@ -18,8 +18,8 @@ const nextConfig = {
         permanent: true,
       },
       {
-        source: "/src/app/dashbroad",
-        destination: "/dashbroad",
+        source: "/src/app/dashboard",
+        destination: "/dashboard",
         permanent: true,
       },
       {

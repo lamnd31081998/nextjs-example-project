@@ -18,7 +18,7 @@ export default function Login() {
 
   useEffect(() => {
     //@ts-ignore
-    if (localStorage.getItem("user_info") && localStorage.getItem("user_info") != "null" && JSON.parse(localStorage.getItem("user_info"))?.user) router.push("/dashbroad");
+    if (localStorage.getItem("user_info") && localStorage.getItem("user_info") != "null" && JSON.parse(localStorage.getItem("user_info"))?.user) router.push("/dashboard");
     else setIsShow(true);
   }, []);
 
@@ -53,7 +53,7 @@ export default function Login() {
           );
 
           setTimeout(() => {
-            router.push("/dashbroad");
+            router.push("/dashboard");
           }, 500);
 
           break;

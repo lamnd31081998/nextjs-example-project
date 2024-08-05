@@ -57,20 +57,16 @@ export default function TemplateComponent({
   if (!isShow) return "";
 
   return (
-    <html lang="en">
-      <body>
-        <Provider store={storeRef.current}>
-          <Layout style={layoutStyle}>
-            <NotficationComponent />
-            <SiderComponent />
-            <Layout>
-              <HeaderComponent user_info={userInfo} />
-              <Content style={contentStyle}>{children}</Content>
-              <FooterComponent />
-            </Layout>
-          </Layout>
-        </Provider>
-      </body>
-    </html>
+    <Provider store={storeRef.current}>
+      <Layout style={layoutStyle}>
+        <NotficationComponent />
+        <SiderComponent />
+        <Layout>
+          <HeaderComponent user_info={userInfo} />
+          <Content style={contentStyle}>{children}</Content>
+          <FooterComponent />
+        </Layout>
+      </Layout>
+    </Provider>
   );
 }
