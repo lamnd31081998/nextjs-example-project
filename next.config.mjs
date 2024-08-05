@@ -13,13 +13,18 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: "/src/app/user",
+        destination: "/user",
+        permanent: true,
+      },
+      {
         source: "/src/app/dashbroad",
         destination: "/dashbroad",
         permanent: true,
       },
       {
-        source: "/src/app/user",
-        destination: "/user",
+        source: "/src/app/staff",
+        destination: "/staff",
         permanent: true,
       },
     ];

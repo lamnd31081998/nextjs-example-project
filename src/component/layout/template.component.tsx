@@ -36,8 +36,15 @@ export default function TemplateComponent({
   const [userInfo, setUserInfo] = useState<any>();
 
   useEffect(() => {
-    //@ts-ignore
-    if (!localStorage.getItem("user_info") || localStorage.getItem("user_info") == "null" || !JSON.parse(localStorage.getItem("user_info"))?.user) router.push("/auth/login");
+    if (
+      //@ts-ignore
+      !localStorage.getItem("user_info") ||
+      //@ts-ignore
+      localStorage.getItem("user_info") == "null" ||
+      //@ts-ignore
+      !JSON.parse(localStorage.getItem("user_info"))?.user
+    )
+      router.push("/auth/login");
     else {
       setIsShow(true);
       //@ts-ignore
@@ -50,16 +57,20 @@ export default function TemplateComponent({
   if (!isShow) return "";
 
   return (
-    <Provider store={storeRef.current}>
-      <Layout style={layoutStyle}>
-        <NotficationComponent />
-        <SiderComponent />
-        <Layout>
-          <HeaderComponent user_info={userInfo} />
-          <Content style={contentStyle}>{children}</Content>
-          <FooterComponent />
-        </Layout>
-      </Layout>
-    </Provider>
+    <html lang="en">
+      <body>
+        <Provider store={storeRef.current}>
+          <Layout style={layoutStyle}>
+            <NotficationComponent />
+            <SiderComponent />
+            <Layout>
+              <HeaderComponent user_info={userInfo} />
+              <Content style={contentStyle}>{children}</Content>
+              <FooterComponent />
+            </Layout>
+          </Layout>
+        </Provider>
+      </body>
+    </html>
   );
 }

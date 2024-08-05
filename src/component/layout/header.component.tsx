@@ -113,18 +113,23 @@ export default function HeaderComponent({
             title={user_info.name}
             icon={<SettingOutlined />}
             style={{ marginLeft: "auto" }}
-            className={window.location.pathname == "/user" ? "ant-menu-submenu-selected" : ""}
+            className={
+              window.location.pathname == "/user"
+                ? "ant-menu-submenu-selected"
+                : ""
+            }
           >
             <Menu.Item
               key={"account_info"}
-              className={window.location.pathname == "/user" ? "ant-menu-item-selected" : ""}
+              className={
+                window.location.pathname == "/user"
+                  ? "ant-menu-item-selected"
+                  : ""
+              }
             >
               <Link href={"/user"}>User Info</Link>
             </Menu.Item>
-            <Menu.Item
-              key={"logout"}
-              onClick={logout}
-            >
+            <Menu.Item key={"logout"} onClick={logout}>
               Logout
             </Menu.Item>
           </Menu.SubMenu>

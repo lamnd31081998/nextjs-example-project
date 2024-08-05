@@ -13,11 +13,5 @@ export default function UserLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html>
-      <body>
-        <TemplateComponent children={children} />
-      </body>
-    </html>
-  );
+  return <TemplateComponent children={children} />;
 }

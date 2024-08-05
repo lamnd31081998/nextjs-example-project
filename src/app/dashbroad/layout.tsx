@@ -13,11 +13,5 @@ export default function DashbroadLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html>
-      <body>
-        <TemplateComponent children={children} />
-      </body>
-    </html>
-  );
+  return <TemplateComponent children={children} />;
 }

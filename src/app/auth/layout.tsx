@@ -17,11 +17,13 @@ export default function RootLayout({
   }
 
   return (
-    <Provider store={storeRef.current}>
-      <html lang="en">
-        <NotficationComponent />
-        <body>{children}</body>
-      </html>
-    </Provider>
+    <html lang="en">
+      <body>
+        <Provider store={storeRef.current}>
+          <NotficationComponent />
+          {children}
+        </Provider>
+      </body>
+    </html>
   );
 }

@@ -152,7 +152,7 @@ export default function User() {
   );
 
   return (
-    <>
+    <div>
       <Row>
         <Col span={4}></Col>
         <h1>User Info</h1>
@@ -220,6 +220,6 @@ export default function User() {
           </Col>
         </Row>
       </Form>
-    </>
+    </div>
   );
 }
